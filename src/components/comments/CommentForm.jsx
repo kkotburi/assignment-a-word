@@ -32,9 +32,8 @@ const CommentForm = () => {
           }
           // alert('댓글이 작성되었습니다.');
 
-          setCommentText('');
-
           onSubmitAddComment();
+          setCommentText('');
         }}
       >
         <input

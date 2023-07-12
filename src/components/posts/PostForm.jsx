@@ -28,9 +28,8 @@ const PostForm = () => {
           }
           // alert('작성이 완료되었습니다.');
 
-          setPostText('');
-
           onSubmitAddPost();
+          setPostText('');
         }}
       >
         <input

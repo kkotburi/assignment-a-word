@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { deletePost } from '../../redux/modules/posts';
-import axios from 'axios';
 import api from '../../axios/api';
 
 const PostList = () => {
-  // const posts = useSelector((state) => state.posts);
-  // const dispatch = useDispatch();
-
-  // axios get
   const [posts, setPosts] = useState(null);
 
   const fetchPosts = async () => {
@@ -29,7 +22,6 @@ const PostList = () => {
   useEffect(() => {
     fetchPosts();
   }, []);
-  // axios delete
 
   return (
     <div>
@@ -40,17 +32,7 @@ const PostList = () => {
             <Link to={`/${post.id}`}>detail</Link>
             <div>{post.id}</div>
             <div>{post.text}</div>
-            <button
-              // onClick={() => {
-              //   dispatch(deletePost(post.id));
-              // }}
-
-              // axios delete
-              onClick={() => onClickDeletePost(post.id)}
-              // axios delete
-            >
-              delete
-            </button>
+            <button onClick={() => onClickDeletePost(post.id)}>delete</button>
           </div>
         );
       })}

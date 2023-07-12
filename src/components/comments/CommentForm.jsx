@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import uuid from 'react-uuid';
-import { addComment } from '../../redux/modules/comments';
-import axios from 'axios';
 import api from '../../axios/api';
 
 const CommentForm = () => {
   const { id } = useParams();
 
-  // const [commentText, setCommentText] = useState('');
-  // const dispatch = useDispatch();
-
-  // axios post
   const [commentText, setCommentText] = useState({
     postId: id,
     text: ''
@@ -23,8 +15,6 @@ const CommentForm = () => {
     // setComments([...commets, commetnText]);
     // fetchComments();
   };
-
-  // axios post
 
   return (
     <div>
@@ -42,18 +32,9 @@ const CommentForm = () => {
           }
           // alert('댓글이 작성되었습니다.');
 
-          // dispatch(
-          //   addComment({
-          //     postId: id,
-          //     id: uuid(),
-          //     text: commentText
-          //   })
-          // );
-          // setCommentText('');
+          setCommentText('');
 
-          // axios post
           onSubmitAddComment();
-          // axios post
         }}
       >
         <input

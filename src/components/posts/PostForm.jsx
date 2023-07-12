@@ -1,15 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addPost } from '../../redux/modules/posts';
-import uuid from 'react-uuid';
-import axios from 'axios';
+import React, { useState } from 'react';
 import api from '../../axios/api';
 
 const PostForm = () => {
-  // const [postText, setPostText] = useState('');
-  // const dispatch = useDispatch();
-
-  // axios post
   const [postText, setPostText] = useState({
     text: ''
   });
@@ -19,7 +11,6 @@ const PostForm = () => {
     // setPosts([...posts, postText]);
     // fetchPosts();
   };
-  // axios post
 
   return (
     <div>
@@ -37,18 +28,9 @@ const PostForm = () => {
           }
           // alert('작성이 완료되었습니다.');
 
-          // dispatch(
-          //   addPost({
-          //     id: uuid(),
-          //     text: postText
-          //   })
-          // );
+          setPostText('');
 
-          // setPostText('');
-
-          // axios post
           onSubmitAddPost();
-          // axios post
         }}
       >
         <input

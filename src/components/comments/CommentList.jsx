@@ -1,22 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { deleteComment } from '../../redux/modules/comments';
-import axios from 'axios';
 import api from '../../axios/api';
 
 const CommentList = () => {
   const { id } = useParams();
 
-  // const comments = useSelector((state) => {
-  //   return state.comments;
-  // });
-  // const filterdComments = comments.filter((comment) => {
-  //   return comment.postId === id;
-  // });
-  // const dispatch = useDispatch();
-
-  // axios get
   const [comments, setComments] = useState(null);
 
   const fetchComments = async () => {
@@ -36,7 +24,6 @@ const CommentList = () => {
   useEffect(() => {
     fetchComments();
   }, []);
-  // axios delete
 
   return (
     <div>
@@ -46,17 +33,7 @@ const CommentList = () => {
           <div key={comment.id}>
             <div>{comment.id}</div>
             <div>{comment.text}</div>
-            <button
-              // onClick={() => {
-              //   dispatch(deleteComment(comment.id));
-              // }}
-
-              // axios delete
-              onClick={() => onClickDeletePost(comment.id)}
-              // axios delete
-            >
-              delete
-            </button>
+            <button onClick={() => onClickDeletePost(comment.id)}>delete</button>
           </div>
         );
       })}

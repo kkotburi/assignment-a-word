@@ -1,24 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { updatePost } from '../redux/modules/posts';
+import api from '../axios/api';
 import CommentForm from '../components/comments/CommentForm';
 import CommentList from '../components/comments/CommentList';
-import axios from 'axios';
-import api from '../axios/api';
 
 const Detail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // const posts = useSelector((state) => state.posts);
-  // const post = posts.find((post) => `${post.id}` === id);
-
   const [editPostText, setEditPostText] = useState('');
 
   const dispatch = useDispatch();
 
-  // axios get
   const [post, setPost] = useState('');
 
   const fetchPosts = async () => {
@@ -36,7 +31,6 @@ const Detail = () => {
   useEffect(() => {
     fetchPosts();
   }, []);
-  // axios fetch
 
   return (
     <div>
@@ -67,9 +61,7 @@ const Detail = () => {
 
           setEditPostText('');
 
-          // axios fetch
           onSubmitUpdatePost();
-          // axios fetch
         }}
       >
         <input

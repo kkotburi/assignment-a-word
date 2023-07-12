@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { updatePost } from '../redux/modules/posts';
 import CommentForm from '../components/comments/CommentForm';
 import CommentList from '../components/comments/CommentList';
 
@@ -11,7 +12,7 @@ const Detail = () => {
   const posts = useSelector((state) => state.posts);
   const post = posts.find((post) => post.id === id);
 
-  const [newPostText, setNewPostText] = useState('');
+  const [editPostText, setEditPostText] = useState('');
 
   const dispatch = useDispatch();
 
@@ -24,33 +25,32 @@ const Detail = () => {
       <div>{post.text}</div>
       <form
         onSubmit={(e) => {
-          if (newPostText === '') {
+          if (editPostText === '') {
             alert('내용을 입력해 주시기 바랍니다.');
             return false;
-          } else if (newPostText.length > 50) {
+          } else if (editPostText.length > 50) {
             alert('띄어쓰기 포함 50자 이하로 작성 부탁드립니다.');
             return false;
           }
           // alert('수정이 완료되었습니다.');
 
           e.preventDefault();
-          setNewPostText('');
+          setEditPostText('');
 
-          dispatch({
-            type: 'UPDATE_POST',
-            payload: {
+          dispatch(
+            updatePost({
               id: post.id,
-              text: newPostText
-            }
-          });
+              text: editPostText
+            })
+          );
         }}
       >
         <input
           type="text"
           name="text"
-          value={newPostText}
+          value={editPostText}
           onChange={(e) => {
-            setNewPostText(e.target.value);
+            setEditPostText(e.target.value);
           }}
         />
         <button type="submit">edit</button>

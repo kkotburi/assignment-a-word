@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { deletePost } from '../../redux/modules/posts';
 
 const PostList = () => {
   const posts = useSelector((state) => {
@@ -20,10 +21,7 @@ const PostList = () => {
             <div>{post.text}</div>
             <button
               onClick={() => {
-                dispatch({
-                  type: 'DELETE_POST',
-                  payload: post.id
-                });
+                dispatch(deletePost(post.id));
               }}
             >
               delete

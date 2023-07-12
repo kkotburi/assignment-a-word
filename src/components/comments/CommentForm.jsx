@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import uuid from 'react-uuid';
+import { addComment } from '../../redux/modules/comments';
 
 const CommentForm = () => {
   const { id } = useParams();
@@ -27,14 +28,13 @@ const CommentForm = () => {
           e.preventDefault();
           setCommentText('');
 
-          dispatch({
-            type: 'ADD_COMMENT',
-            payload: {
+          dispatch(
+            addComment({
               postId: id,
               id: uuid(),
               text: commentText
-            }
-          });
+            })
+          );
         }}
       >
         <input

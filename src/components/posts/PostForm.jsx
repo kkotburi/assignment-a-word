@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { addPost } from '../../redux/modules/posts';
 import uuid from 'react-uuid';
 
 const PostForm = () => {
@@ -24,13 +25,12 @@ const PostForm = () => {
           e.preventDefault();
           setPostText('');
 
-          dispatch({
-            type: 'ADD_POST',
-            payload: {
+          dispatch(
+            addPost({
               id: uuid(),
               text: postText
-            }
-          });
+            })
+          );
         }}
       >
         <input

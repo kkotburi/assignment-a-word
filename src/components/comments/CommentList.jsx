@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { deleteComment } from '../../redux/modules/comments';
 
 const CommentList = () => {
   const { id } = useParams();
@@ -24,10 +25,7 @@ const CommentList = () => {
             <div>{comment.text}</div>
             <button
               onClick={() => {
-                dispatch({
-                  type: 'DELETE_COMMENT',
-                  payload: comment.id
-                });
+                dispatch(deleteComment(comment.id));
               }}
             >
               delete

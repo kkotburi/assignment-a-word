@@ -1,12 +1,12 @@
-import { combineReducers, createStore } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 import posts from '../modules/posts';
 import comments from '../modules/comments';
 
-const roodReducer = combineReducers({
-  posts,
-  comments
+const store = configureStore({
+  reducer: {
+    posts,
+    comments
+  }
 });
-
-const store = createStore(roodReducer);
 
 export default store;

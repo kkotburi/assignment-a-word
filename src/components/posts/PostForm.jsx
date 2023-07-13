@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import uuid from 'react-uuid';
+import { useMutation, useQueryClient } from 'react-query';
+import { addPost } from '../../api/posts';
 
 const PostForm = () => {
   const [postText, setPostText] = useState('');
 
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+  const mutation = useMutation(addPost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('posts');
+    }
+  });
 
   return (
     <div>
       PostForm
       <form
         onSubmit={(e) => {
+          e.preventDefault();
+
           if (!postText) {
             alert('내용을 입력해 주시기 바랍니다.');
             return false;
@@ -21,21 +28,18 @@ const PostForm = () => {
           }
           // alert('작성이 완료되었습니다.');
 
-          e.preventDefault();
-          setPostText('');
+          const newTodo = {
+            text: postText
+          };
 
-          dispatch({
-            type: 'ADD_POST',
-            payload: {
-              id: uuid(),
-              text: postText
-            }
-          });
+          mutation.mutate(newTodo);
+
+          setPostText('');
         }}
       >
         <input
           type="text"
-          name="text"
+          name="postText"
           value={postText}
           onChange={(e) => {
             setPostText(e.target.value);

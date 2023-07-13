@@ -1,17 +1,21 @@
-import uuid from 'react-uuid';
+import { createSlice } from '@reduxjs/toolkit';
 
-const initialPosts = [
-  { id: uuid(), text: 'This is post test <3' },
-  { id: uuid(), text: 'for detail page test &>>' }
+const initialState = [
+  { id: 1, text: 'This is post test <3' },
+  { id: 2, text: 'for detail page test &>>' }
 ];
 
-const posts = (state = initialPosts, action) => {
-  switch (action.type) {
-    case 'ADD_POST':
+const postsSlice = createSlice({
+  name: 'posts',
+  initialState,
+  reducers: {
+    addPost: (state, action) => {
       return [...state, action.payload];
-    case 'DELETE_POST':
+    },
+    deletePost: (state, action) => {
       return state.filter((post) => post.id !== action.payload);
-    case 'UPDATE_POST':
+    },
+    updatePost: (state, action) => {
       return state.map((post) => {
         if (post.id === action.payload.id) {
           return { ...post, text: action.payload.text };
@@ -19,9 +23,9 @@ const posts = (state = initialPosts, action) => {
           return post;
         }
       });
-    default:
-      return state;
+    }
   }
-};
+});
 
-export default posts;
+export const { addPost, deletePost, updatePost } = postsSlice.actions;
+export default postsSlice.reducer;

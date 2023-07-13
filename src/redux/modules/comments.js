@@ -1,14 +1,19 @@
-const initialComments = [];
+import { createSlice } from '@reduxjs/toolkit';
 
-const comments = (state = initialComments, action) => {
-  switch (action.type) {
-    case 'ADD_COMMENT':
+const initialState = [{ postId: '', id: '', text: '' }];
+
+const commentSlice = createSlice({
+  name: 'comments',
+  initialState,
+  reducers: {
+    addComment: (state, action) => {
       return [...state, action.payload];
-    case 'DELETE_COMMENT':
+    },
+    deleteComment: (state, action) => {
       return state.filter((comment) => comment.id !== action.payload);
-    default:
-      return state;
+    }
   }
-};
+});
 
-export default comments;
+export const { addComment, deleteComment } = commentSlice.actions;
+export default commentSlice.reducer;

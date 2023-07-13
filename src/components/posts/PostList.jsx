@@ -1,33 +1,36 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { deletePost, getPosts } from '../../api/posts';
 
 const PostList = () => {
-  const posts = useSelector((state) => {
-    return state.posts;
+  const queryClient = useQueryClient();
+  const mutation = useMutation(deletePost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('posts');
+    }
   });
 
-  const dispatch = useDispatch();
+  const { isLoading, isError, data } = useQuery('posts', getPosts);
+
+  if (isLoading) {
+    return <div>Loading…</div>;
+  }
+
+  if (isError) {
+    return <div>Error</div>;
+  }
 
   return (
     <div>
       PostList
-      {posts.map((post) => {
+      {data.map((post) => {
         return (
           <div key={post.id}>
             <Link to={`/${post.id}`}>detail</Link>
             <div>{post.id}</div>
             <div>{post.text}</div>
-            <button
-              onClick={() => {
-                dispatch({
-                  type: 'DELETE_POST',
-                  payload: post.id
-                });
-              }}
-            >
-              delete
-            </button>
+            <button onClick={() => mutation.mutate(post.id)}>delete</button>
           </div>
         );
       })}

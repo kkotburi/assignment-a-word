@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../../axios/api';
+import { useMutation, useQueryClient } from 'react-query';
+import { updatePost } from '../../api/posts';
 
 const PostDetail = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation(updatePost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('posts');
+    }
+  });
+
   const { id } = useParams();
 
   const [post, setPost] = useState('');
@@ -11,13 +20,6 @@ const PostDetail = () => {
   const fetchPosts = async () => {
     const { data } = await api.get('/posts');
     setPost(data.find((post) => `${post.id}` === id));
-  };
-
-  const onSubmitUpdatePost = async () => {
-    api.patch(`/posts/${id}`, {
-      text: editPostText
-    });
-    setPost({ ...post, text: editPostText });
   };
 
   useEffect(() => {
@@ -41,8 +43,14 @@ const PostDetail = () => {
           }
           // alert('수정이 완료되었습니다.');
 
-          onSubmitUpdatePost();
           setEditPostText('');
+
+          const editPost = {
+            id: post.id,
+            text: editPostText
+          };
+
+          mutation.mutate(editPost);
         }}
       >
         <input

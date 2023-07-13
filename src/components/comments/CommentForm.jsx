@@ -12,8 +12,6 @@ const CommentForm = () => {
 
   const onSubmitAddComment = () => {
     api.post('/comments', commentText);
-    // setComments([...commets, commetnText]);
-    // fetchComments();
   };
 
   return (

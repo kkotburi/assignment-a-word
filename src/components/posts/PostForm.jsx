@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import api from '../../axios/api';
+import { useMutation, useQueryClient } from 'react-query';
+import { addPost } from '../../api/posts';
 
 const PostForm = () => {
-  const [postText, setPostText] = useState({
-    text: ''
-  });
+  const [postText, setPostText] = useState('');
 
-  const onSubmitAddPost = () => {
-    api.post('/posts', postText);
-    // setPosts([...posts, postText]);
-    // fetchPosts();
-  };
+  const queryClient = useQueryClient();
+  const mutation = useMutation(addPost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('posts');
+    }
+  });
 
   return (
     <div>
@@ -19,25 +19,30 @@ const PostForm = () => {
         onSubmit={(e) => {
           e.preventDefault();
 
-          if (!postText.text) {
+          if (!postText) {
             alert('내용을 입력해 주시기 바랍니다.');
             return false;
-          } else if (postText.text.length > 50) {
+          } else if (postText.length > 50) {
             alert('띄어쓰기 포함 50자 이하로 작성 부탁드립니다.');
             return false;
           }
           // alert('작성이 완료되었습니다.');
 
-          onSubmitAddPost();
+          const newTodo = {
+            text: postText
+          };
+
+          mutation.mutate(newTodo);
+
           setPostText('');
         }}
       >
         <input
           type="text"
           name="text"
-          value={postText.title}
+          value={postText}
           onChange={(e) => {
-            setPostText({ text: e.target.value });
+            setPostText(e.target.value);
           }}
         />
         <button type="submit">add</button>

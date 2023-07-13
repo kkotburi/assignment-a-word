@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import api from '../../axios/api';
+import { useMutation, useQueryClient } from 'react-query';
+import { addComment } from '../../api/comments';
 
 const CommentForm = () => {
   const { id } = useParams();
 
-  const [commentText, setCommentText] = useState({
-    postId: id,
-    text: ''
-  });
+  const [commentText, setCommentText] = useState('');
 
-  const onSubmitAddComment = () => {
-    api.post('/comments', commentText);
-  };
+  const queryClient = useQueryClient();
+  const mutation = useMutation(addComment, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('comments');
+    }
+  });
 
   return (
     <div>
@@ -30,16 +31,22 @@ const CommentForm = () => {
           }
           // alert('댓글이 작성되었습니다.');
 
-          onSubmitAddComment();
+          const newComment = {
+            postId: id,
+            text: commentText
+          };
+
+          mutation.mutate(newComment);
+
           setCommentText('');
         }}
       >
         <input
           type="text"
-          name="text"
-          value={commentText.text}
+          name="commentText"
+          value={commentText}
           onChange={(e) => {
-            setCommentText({ postId: id, text: e.target.value });
+            setCommentText(e.target.value);
           }}
         />
         <button>done</button>

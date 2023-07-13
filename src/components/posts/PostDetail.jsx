@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import api from '../../axios/api';
-import { useMutation, useQueryClient } from 'react-query';
-import { updatePost } from '../../api/posts';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { getPosts, updatePost } from '../../api/posts';
 
 const PostDetail = () => {
+  const { id } = useParams();
+
+  const [editPostText, setEditPostText] = useState('');
+
   const queryClient = useQueryClient();
   const mutation = useMutation(updatePost, {
     onSuccess: () => {
@@ -12,19 +15,17 @@ const PostDetail = () => {
     }
   });
 
-  const { id } = useParams();
+  const { isLoading, isError, data } = useQuery('posts', getPosts);
 
-  const [post, setPost] = useState('');
-  const [editPostText, setEditPostText] = useState('');
+  if (isLoading) {
+    return <div>Loading…</div>;
+  }
 
-  const fetchPosts = async () => {
-    const { data } = await api.get('/posts');
-    setPost(data.find((post) => `${post.id}` === id));
-  };
+  if (isError) {
+    return <div>Error</div>;
+  }
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
+  const post = data.find((post) => `${post.id}` === id);
 
   return (
     <div>
@@ -43,19 +44,19 @@ const PostDetail = () => {
           }
           // alert('수정이 완료되었습니다.');
 
-          setEditPostText('');
-
           const editPost = {
             id: post.id,
             text: editPostText
           };
 
           mutation.mutate(editPost);
+
+          setEditPostText('');
         }}
       >
         <input
           type="text"
-          name="text"
+          name="editPostText"
           value={editPostText}
           onChange={(e) => {
             setEditPostText(e.target.value);

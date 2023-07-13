@@ -39,7 +39,7 @@ const PostForm = () => {
       >
         <input
           type="text"
-          name="text"
+          name="postText"
           value={postText}
           onChange={(e) => {
             setPostText(e.target.value);

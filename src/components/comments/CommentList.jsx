@@ -1,39 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import api from '../../axios/api';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { deleteComment, getComments } from '../../api/comments';
 
 const CommentList = () => {
   const { id } = useParams();
 
-  const [comments, setComments] = useState(null);
+  const queryClient = useQueryClient();
+  const mutation = useMutation(deleteComment, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('comments');
+    }
+  });
 
-  const fetchComments = async () => {
-    const { data } = await api.get('/comments');
-    setComments(data.filter((comment) => `${comment.postId}` === id));
-  };
+  const { isLoading, isError, data } = useQuery('comments', getComments);
 
-  const onClickDeletePost = async (id) => {
-    api.delete(`/comments/${id}`);
-    setComments(
-      comments.filter((comment) => {
-        return comment.id !== id;
-      })
-    );
-  };
+  if (isLoading) {
+    return <div>Loading…</div>;
+  }
 
-  useEffect(() => {
-    fetchComments();
-  }, []);
+  if (isError) {
+    return <div>Error</div>;
+  }
+
+  const comments = data.filter((comment) => `${comment.postId}` === id);
 
   return (
     <div>
       CommentList
-      {comments?.map((comment) => {
+      {comments.map((comment) => {
         return (
           <div key={comment.id}>
             <div>{comment.id}</div>
             <div>{comment.text}</div>
-            <button onClick={() => onClickDeletePost(comment.id)}>delete</button>
+            <button onClick={() => mutation.mutate(comment.id)}>delete</button>
           </div>
         );
       })}
